@@ -5,3 +5,5 @@ version = '1.0.0'
 git = 'https://github.com/aptos-labs/aptos-core.git'
 rev = 'main'
 subdir = 'aptos-move/framework/aptos-framework'
+[addresses]
+todolist_addr='f142cd3707a9f62b2aaee877d289764dd922e9265a7ae8101e7ff697b396fef0'
