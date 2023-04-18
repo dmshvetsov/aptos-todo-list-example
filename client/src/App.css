@@ -2,3 +2,7 @@
   height: 100vh;
   padding: 2rem 0;
 }
+
+.tld-wallet-address {
+  color: white;
+}

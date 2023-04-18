@@ -1,20 +1,11 @@
 import { WalletSelector } from '@aptos-labs/wallet-adapter-ant-design'
-import {
-  Button,
-  Layout,
-  Row,
-  Col,
-  List,
-  Checkbox,
-  Input,
-  Space,
-} from 'antd'
+import { Button, Layout, Row, Col, List, Checkbox, Input, Space } from 'antd'
 import { useWallet } from '@aptos-labs/wallet-adapter-react'
 
 import '@aptos-labs/wallet-adapter-ant-design/dist/index.css'
 import { useEffect, useState } from 'react'
 import { getContractAccount } from './id'
-import { getAptosClient } from './aptos'
+import { formatAddress, getAptosClient } from './aptos'
 import { Task } from './todo-list'
 import { CheckboxChangeEvent } from 'antd/es/checkbox/Checkbox'
 
@@ -209,12 +200,22 @@ export default function App() {
             <h1 className="logo">Aptos Example Todo List</h1>
           </Col>
           <Col>
-            <WalletSelector />
+            <span className="tld-wallet-address">
+              wallet{' '}
+              {account ? formatAddress(account.address) : 'not connected'}
+            </span>
           </Col>
         </Row>
       </Layout.Header>
       <Layout.Content className="tld-content-container">
-        {tasks === null ? (
+        {!account && (
+          <Row gutter={[0, 32]} justify="center">
+            <Col>
+              <WalletSelector />
+            </Col>
+          </Row>
+        )}
+        {account && tasks === null && (
           <Row gutter={[0, 32]}>
             <Col span={12} offset={6}>
               <Button
@@ -222,13 +223,13 @@ export default function App() {
                 loading={isTransactionInProgress}
                 block
                 type="primary"
-                style={{ height: '40px', backgroundColor: '#3f67ff' }}
               >
                 Create a Todo List
               </Button>
             </Col>
           </Row>
-        ) : (
+        )}
+        {account && tasks !== null && (
           <Row gutter={[0, 32]}>
             <Col span={12} offset={6}>
               <Space.Compact block>
@@ -271,9 +272,9 @@ export default function App() {
                           <a
                             href={`https://explorer.aptoslabs.com/account/${task.address}/`}
                             target="_blank"
-                          >{`${task.address.slice(0, 6)}...${task.address.slice(
-                            -5
-                          )}`}</a>
+                          >
+                            {formatAddress(task.address)}
+                          </a>
                         }
                       />
                     </List.Item>
